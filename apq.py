@@ -259,7 +259,7 @@ def filter_on_msg_key(msgs, pattern, key):
     return msgs
 
 
-def filter_on_msg_reason(msgs, pattern, key):
+def filter_on_msg_reason(msgs, pattern):
     filtered = OrderedDict()
     pat = re.compile(pattern, re.IGNORECASE)
     for (queue_id, msg) in msgs.items():
@@ -269,6 +269,19 @@ def filter_on_msg_reason(msgs, pattern, key):
             reason = recipient["reason"]
             if reason and re.search(pat, reason):
                 filtered[queue_id] = msg
+
+    return filtered
+
+
+def filter_on_msg_recipient(msgs, pattern):
+    filtered = OrderedDict()
+    pat = re.compile(pattern, re.IGNORECASE)
+    for (queue_id, msg) in msgs.items():
+        for recipient in msg["recipients"]:
+            addresses = recipient["addresses"]
+            for address in addresses:
+                if re.search(pat, address):
+                    filtered[queue_id] = msg
 
     return filtered
 
@@ -427,11 +440,11 @@ def main():
 
     # Filter messages
     if args.reason:
-        msgs = filter_on_msg_reason(msgs, args.reason, 'reason')
+        msgs = filter_on_msg_reason(msgs, args.reason)
     if args.sender:
         msgs = filter_on_msg_key(msgs, args.sender, 'sender')
     if args.recipient:
-        msgs = filter_on_msg_key(msgs, args.recipient, 'recipient')
+        msgs = filter_on_msg_recipient(msgs, args.recipient)
     if args.minage:
         msgs = filter_on_msg_age(msgs, 'minage', args.minage)
     if args.maxage:
