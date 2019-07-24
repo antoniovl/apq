@@ -255,8 +255,22 @@ def filter_on_msg_key(msgs, pattern, key):
     Filter msgs, returning only ones where 'key' exists and the value matches regex 'pattern'.
     """
     pat = re.compile(pattern, re.IGNORECASE)
-    msgs = dict((msgid, data) for (msgid, data) in msgs.iteritems() if key in data and re.search(pat, data[key]))
+    msgs = dict((msgid, data) for (msgid, data) in msgs.items() if key in data and re.search(pat, data[key]))
     return msgs
+
+
+def filter_on_msg_reason(msgs, pattern, key):
+    filtered = OrderedDict()
+    pat = re.compile(pattern, re.IGNORECASE)
+    for (queue_id, msg) in msgs.items():
+        if msg["status"] == ST_ACTIVE:
+            continue
+        for recipient in msg["recipients"]:
+            reason = recipient["reason"]
+            if reason and re.search(pat, reason):
+                filtered[queue_id] = msg
+
+    return filtered
 
 
 def filter_on_msg_age(msgs, condition, age):
@@ -413,7 +427,7 @@ def main():
 
     # Filter messages
     if args.reason:
-        msgs = filter_on_msg_key(msgs, args.reason, 'reason')
+        msgs = filter_on_msg_reason(msgs, args.reason, 'reason')
     if args.sender:
         msgs = filter_on_msg_key(msgs, args.sender, 'sender')
     if args.recipient:
