@@ -24,7 +24,10 @@ def call_mailq(args):
         cmd = subprocess.Popen(MAILQ_EXE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         stdout, stderr = cmd.communicate()
         if cmd.returncode not in (0, 69):
-            print('Error: mailq failed: "{}"'.format(stderr.strip()), file=sys.stderr)
+            print("Error: mailq failed: \"{}\"".format(stderr.strip()), file=sys.stderr)
+        if stdout:
+            # Popen returns a binary string.
+            stdout = stdout.decode('utf-8')
     else:
         with open(args.mailq_data, 'r') as f:
             stdout = f.read()
