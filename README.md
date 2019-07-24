@@ -6,6 +6,8 @@ Parse Postfix mail queue into JSON or YAML.
 This fork it's suited for a very specifc need where I have servers running Postfix 2.x and I need the output 
 from "postqueue -j". Therefore, I'm introducing changes that break compatibility with the original project.
 
+_It only supports Python 3.x._
+
     usage: apq.py [-h] [-j] [-y] [-c] [--log] [--mailq-data MAILQ_DATA]
                   [--reason REASON] [--recipient RECIPIENT] [--sender SENDER]
                   [--parse-date] [--maxage MAXAGE] [--minage MINAGE]
