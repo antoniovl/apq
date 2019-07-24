@@ -47,4 +47,4 @@ Todo
 Help
 ====
 
-Email me (alex@jurkiewi.cz) or open a Github issue.
+Open a Github issue.
