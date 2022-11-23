@@ -310,7 +310,7 @@ def filter_on_msg_age(msgs, condition, age):
     elif condition == 'maxage':
         f = lambda d: (now - datetime.datetime.fromtimestamp(d)).total_seconds() <= age_secs
     # Filter
-    msgs = dict((msgid, data) for (msgid, data) in msgs.iteritems() if f(data['date']))
+    msgs = dict((msgid, data) for msgid, data in msgs.items() if f(data['date']))
     return msgs
 
 
@@ -390,7 +390,7 @@ def output_msgs(args, msgs):
 
 def parse_msg_dates(msgs, now):
     new_msgs = {}
-    for msgid, data in msgs.iteritems():
+    for msgid, data in msgs.items():
         if 'date' not in data:
             data['date'] = parse_mailq_date(data['rawdate'], now)
             new_msgs[msgid] = data
@@ -453,9 +453,9 @@ def main():
     if args.maxage:
         msgs = filter_on_msg_age(msgs, 'maxage', args.maxage)
     if args.exclude_active:
-        msgs = dict((msgid, data) for (msgid, data) in msgs.iteritems() if data.get('status') != 'active')
+        msgs = dict((msgid, data) for (msgid, data) in msgs.items() if data.get('status') != 'active')
     elif args.only_active:
-        msgs = dict((msgid, data) for (msgid, data) in msgs.iteritems() if data.get('status') == 'active')
+        msgs = dict((msgid, data) for (msgid, data) in msgs.items() if data.get('status') == 'active')
 
     output_msgs(args, msgs)
 
